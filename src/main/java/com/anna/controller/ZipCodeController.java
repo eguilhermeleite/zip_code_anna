@@ -84,7 +84,7 @@ public class ZipCodeController extends HttpServlet {
 				
 				// extrair atributos especificos do json
 				ObjectMapper mapper = new ObjectMapper();
-				JsonNode jsonNode = mapper.readTree(response.body());
+				JsonNode jsonNode = mapper.readTree(response.toString());
 				
 				String cepPesquisado = (String)jsonNode.get("cep").toString();
 				String logradouro = (String)jsonNode.get("logradouro").toString();
