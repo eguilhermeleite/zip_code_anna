@@ -88,22 +88,14 @@ public class ZipCodeController extends HttpServlet {
 				ObjectMapper mapper = new ObjectMapper();
 				JsonNode jsonNode = mapper.readTree(response.body());
 				
-				String cepPesquisado =jsonNode.get("cep").toString();
+				String cepPesquisado = jsonNode.get("cep").toString();
 				String logradouro =jsonNode.get("logradouro").toString();
 				String bairro =jsonNode.get("bairro").toString();
 				String cidade =jsonNode.get("localidade").toString();
 				String uf =jsonNode.get("uf").toString();
 				String ddd =jsonNode.get("ddd").toString();
 				
-				PrintWriter cP = new PrintWriter(new FileWriter(cepPesquisado));
-				PrintWriter lg = new PrintWriter(new FileWriter(logradouro));
-				PrintWriter br = new PrintWriter(new FileWriter(bairro));
-				PrintWriter cd = new PrintWriter(new FileWriter(cidade));
-				PrintWriter un = new PrintWriter(new FileWriter(uf));
-				PrintWriter dd = new PrintWriter(new FileWriter(ddd));
-
-
-
+				
 				String finalResponse = "Resultado para o CEP informado";
 				finalResponse += "[{";
 				finalResponse += "\"PropName\":\"Container001\",";
@@ -117,37 +109,37 @@ public class ZipCodeController extends HttpServlet {
 				// cep
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Cep\",";
-				finalResponse += "\"PropValue\":\"CEP: " + cP + "\"";
+				finalResponse += "\"PropValue\":\"CEP: " + response.body().indexOf("cep") + "\"";
 				finalResponse += "},";
 
 				// logradouro
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Logradouro\",";
-				finalResponse += "\"PropValue\":\"LOGRADOURO: " + lg + "\"";
+				finalResponse += "\"PropValue\":\"LOGRADOURO: " + response.body().indexOf("cep") + "\"";
 				finalResponse += "},";
 
 				// bairro
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Bairro\",";
-				finalResponse += "\"PropValue\":\"BAIRRO: " + br + "\"";
+				finalResponse += "\"PropValue\":\"BAIRRO: " +response.body().indexOf("cep") + "\"";
 				finalResponse += "},";
 
 				// cidade
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Cidade\",";
-				finalResponse += "\"PropValue\":\"CIDADE: " + cd + "\"";
+				finalResponse += "\"PropValue\":\"CIDADE: " + response.body().indexOf("cep") + "\"";
 				finalResponse += "},";
 
 				// UF
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"UF\",";
-				finalResponse += "\"PropValue\":\"UF: " + un + "\"";
+				finalResponse += "\"PropValue\":\"UF: " + response.body().indexOf("cep") + "\"";
 				finalResponse += "}";
 				
 				// DDD
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"DDD\",";
-				finalResponse += "\"PropValue\":\"DDD: " + dd + "\"";
+				finalResponse += "\"PropValue\":\"DDD: " + response.body().indexOf("cep") + "\"";
 				finalResponse += "}";
 
 				finalResponse += "]";
