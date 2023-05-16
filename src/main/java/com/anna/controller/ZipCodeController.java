@@ -86,12 +86,12 @@ public class ZipCodeController extends HttpServlet {
 			if (response.statusCode() == 200) {
 				
 				JsonNode jsonNode = mapper.readTree(response.body());
-				String cepPesquisado = jsonNode.get("cep").asText();
-				String logradouro = jsonNode.get("logradouro").asText();
-				String bairro = jsonNode.get("bairro").asText();
-				String cidade = jsonNode.get("localidade").asText();
-				String uf = jsonNode.get("uf").asText();
-				String ddd = jsonNode.get("ddd").asText();
+				String cepPesquisado = jsonNode.get("cep").toString();
+				String logradouro = jsonNode.get("logradouro").toString();
+				String bairro = jsonNode.get("bairro").toString();
+				String cidade = jsonNode.get("localidade").toString();
+				String uf = jsonNode.get("uf").toString();
+				String ddd = jsonNode.get("ddd").toString();
 				
 
 				String finalResponse = "Resultado para o CEP informado";
