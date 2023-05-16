@@ -80,37 +80,38 @@ public class ZipCodeController extends HttpServlet {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 			if (response.statusCode() == 200) {
-				System.out.println("\n******************************************");
-				System.out.println(response.body());
+				//System.out.println("\n******************************************");
+				//System.out.println(response.body());
+				String rb = response.body();
 			} else {
-				System.out.println("Erro ao consultar CEP: " + response.statusCode());
+			//System.out.println("Erro ao consultar CEP: " + response.statusCode());
 			} //
 
 			// extrair atributos especificos do json
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode jsonNode = mapper.readTree(response.body());
 
-			System.out.println("\n******************************************");
+			//System.out.println("\n******************************************");
 
 			String cepPesquisado = jsonNode.get("cep").asText();
-			System.out.println("CEP: " + cepPesquisado);
+			//System.out.println("CEP: " + cepPesquisado);
 
 			String logradouro = jsonNode.get("logradouro").asText();
-			System.out.println("Logradouro: " + logradouro);
+			//System.out.println("Logradouro: " + logradouro);
 
 			String bairro = jsonNode.get("bairro").asText();
-			System.out.println("Bairro: " + bairro);
+			//System.out.println("Bairro: " + bairro);
 
 			String cidade = jsonNode.get("localidade").asText();
-			System.out.println("Cidade: " + cidade);
+			//System.out.println("Cidade: " + cidade);
 
 			String uf = jsonNode.get("uf").asText();
-			System.out.println("UF: " + uf);
+			//System.out.println("UF: " + uf);
 
 			String ddd = jsonNode.get("ddd").asText();
-			System.out.println("DDD: " + ddd);
+			//System.out.println("DDD: " + ddd);
 
-			System.out.println("******************************************\n");
+			//System.out.println("******************************************\n");
 
 			String finalResponse = "Resultado para o CEP informado";
 			finalResponse += "[{";
@@ -169,7 +170,6 @@ public class ZipCodeController extends HttpServlet {
 			// Encriptado"
 			finalResponse = finalResponse + ivReceived + newIVEncrip;
 
-	
 			// Envio das informações ao AnnA
 			PrintWriter out = res.getWriter();
 			out.print(finalResponse);
