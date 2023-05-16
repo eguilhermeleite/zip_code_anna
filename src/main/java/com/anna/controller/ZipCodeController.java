@@ -82,17 +82,19 @@ public class ZipCodeController extends HttpServlet {
 
 			if (response.statusCode() == 200) {
 				
+		
 				// extrair atributos especificos do json
 				ObjectMapper mapper = new ObjectMapper();
-				JsonNode jsonNode = mapper.readTree(response.toString());
+				JsonNode jsonNode = mapper.readTree(response.body());
 				
-				String cepPesquisado = (String)jsonNode.get("cep").toString();
-				String logradouro = (String)jsonNode.get("logradouro").toString();
-				String bairro = (String)jsonNode.get("bairro").toString();
-				String cidade = (String)jsonNode.get("localidade").toString();
-				String uf = (String)jsonNode.get("uf").toString();
-				String ddd =(String)jsonNode.get("ddd").toString();
-				
+				/*
+				String cepPesquisado =jsonNode.get("cep").toString();
+				String logradouro =jsonNode.get("logradouro").toString();
+				String bairro =jsonNode.get("bairro").toString();
+				String cidade =jsonNode.get("localidade").toString();
+				String uf =jsonNode.get("uf").toString();
+				String ddd =jsonNode.get("ddd").toString();
+		
 				
 				String cp = cepPesquisado;
 				String lg = logradouro;
@@ -100,7 +102,7 @@ public class ZipCodeController extends HttpServlet {
 				String cd = cidade;
 				String un = uf;
 				String dd = ddd;
-				
+				*/
 
 				String finalResponse = "Resultado para o CEP informado";
 				finalResponse += "[{";
@@ -115,37 +117,37 @@ public class ZipCodeController extends HttpServlet {
 				// cep
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Cep\",";
-				finalResponse += "\"PropValue\":\"CEP: " + cp + "\"";
+				finalResponse += "\"PropValue\":\"CEP: " + jsonNode.get("cep").toString() + "\"";
 				finalResponse += "},";
 
 				// logradouro
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Logradouro\",";
-				finalResponse += "\"PropValue\":\"LOGRADOURO: " + lg + "\"";
+				finalResponse += "\"PropValue\":\"LOGRADOURO: " + jsonNode.get("logradouro").toString() + "\"";
 				finalResponse += "},";
 
 				// bairro
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Bairro\",";
-				finalResponse += "\"PropValue\":\"BAIRRO: " + br + "\"";
+				finalResponse += "\"PropValue\":\"BAIRRO: " + jsonNode.get("bairro").toString() + "\"";
 				finalResponse += "},";
 
 				// cidade
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Cidade\",";
-				finalResponse += "\"PropValue\":\"CIDADE: " + cd + "\"";
+				finalResponse += "\"PropValue\":\"CIDADE: " + jsonNode.get("cidade").toString() + "\"";
 				finalResponse += "},";
 
 				// UF
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"UF\",";
-				finalResponse += "\"PropValue\":\"UF: " + un + "\"";
+				finalResponse += "\"PropValue\":\"UF: " + jsonNode.get("uf").toString() + "\"";
 				finalResponse += "}";
 				
 				// DDD
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"DDD\",";
-				finalResponse += "\"PropValue\":\"DDD: " + dd + "\"";
+				finalResponse += "\"PropValue\":\"DDD: " + jsonNode.get("ddd").toString() + "\"";
 				finalResponse += "}";
 
 				finalResponse += "]";
