@@ -40,6 +40,10 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/zipcode")
 public class ZipCodeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	// extrair atributos especificos do json
+	ObjectMapper mapper = new ObjectMapper();
+	
 
 	public ZipCodeController() {
 		super();
@@ -80,28 +84,14 @@ public class ZipCodeController extends HttpServlet {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 			if (response.statusCode() == 200) {
-				//System.out.println("\n******************************************");
-				//System.out.println(response.body());
-				// extrair atributos especificos do json
-				ObjectMapper mapper = new ObjectMapper();
+				
 				JsonNode jsonNode = mapper.readTree(response.body());
 				String cepPesquisado = jsonNode.get("cep").asText();
-				//System.out.println("CEP: " + cepPesquisado);
-
 				String logradouro = jsonNode.get("logradouro").asText();
-				//System.out.println("Logradouro: " + logradouro);
-
 				String bairro = jsonNode.get("bairro").asText();
-				//System.out.println("Bairro: " + bairro);
-
 				String cidade = jsonNode.get("localidade").asText();
-				//System.out.println("Cidade: " + cidade);
-
 				String uf = jsonNode.get("uf").asText();
-				//System.out.println("UF: " + uf);
-
 				String ddd = jsonNode.get("ddd").asText();
-				//System.out.println("DDD: " + ddd);
 				
 
 				String finalResponse = "Resultado para o CEP informado";
@@ -142,6 +132,12 @@ public class ZipCodeController extends HttpServlet {
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"UF\",";
 				finalResponse += "\"PropValue\":\"UF: " + uf + "\"";
+				finalResponse += "}";
+				
+				// DDD
+				finalResponse += "{";
+				finalResponse += "\"PropName\":\"DDD\",";
+				finalResponse += "\"PropValue\":\"DDD: " + ddd + "\"";
 				finalResponse += "}";
 
 				finalResponse += "]";
