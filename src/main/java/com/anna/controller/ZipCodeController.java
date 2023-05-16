@@ -120,16 +120,12 @@ public class ZipCodeController extends HttpServlet {
 			finalResponse += "\"PropValue\":\"EXECFUNCTION\"";
 			finalResponse += "},";
 
-			// cep - logradouro
+			// cep -logradouro
 			finalResponse += "{";
 			finalResponse += "\"PropName\":\"Expression\",";
-			finalResponse += "\"PropValue\":\"AddParm(CEP," + cepPesquisado + ")"
-					                       + "AddParm(LOGRADOURO," + logradouro + ")"
-					                       + "AddParm(BAIRRO," + bairro + ")"
-					                       + "AddParm(CIDADE," + cidade + ")"
-					                       + "AddParm(UF," + uf + ")"
-					                       + "AddParm(DDD," + ddd + ")\"\"";
-			finalResponse += "},";
+			finalResponse += "\"PropValue\":\"AddParm(CEP," + cepPesquisado + ")AddParm(LOGRADOURO," + logradouro + ")AddParm(BAIRRO," + bairro + ")AddParm(CIDADE," + cidade + ")AddParm(UF," + uf + ")AddParm(DDD," + ddd + ")\"";                                          
+			finalResponse += "},";                                                                                                                                                
+
 			finalResponse += "]";
 			finalResponse += "}]";
 
