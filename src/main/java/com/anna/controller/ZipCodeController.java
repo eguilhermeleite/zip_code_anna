@@ -1,5 +1,7 @@
 package com.anna.controller;
 
+import java.io.FileWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -82,32 +84,25 @@ public class ZipCodeController extends HttpServlet {
 
 			if (response.statusCode() == 200) {
 				
-				
-				PrintWriter responseBody = res.getWriter().printf(response.body());;
-		
-				
 				// extrair atributos especificos do json
-				//ObjectMapper mapper = new ObjectMapper();
-				//JsonNode jsonNode = mapper.readTree(responseBody);
+				ObjectMapper mapper = new ObjectMapper();
+				JsonNode jsonNode = mapper.readTree(response.body());
 				
-				/*
 				String cepPesquisado =jsonNode.get("cep").toString();
 				String logradouro =jsonNode.get("logradouro").toString();
 				String bairro =jsonNode.get("bairro").toString();
 				String cidade =jsonNode.get("localidade").toString();
 				String uf =jsonNode.get("uf").toString();
 				String ddd =jsonNode.get("ddd").toString();
-		
 				
-				*/
-				
+				PrintWriter cP = new PrintWriter(new FileWriter(cepPesquisado));
+				PrintWriter lg = new PrintWriter(new FileWriter(logradouro));
+				PrintWriter br = new PrintWriter(new FileWriter(bairro));
+				PrintWriter cd = new PrintWriter(new FileWriter(cidade));
+				PrintWriter un = new PrintWriter(new FileWriter(uf));
+				PrintWriter dd = new PrintWriter(new FileWriter(ddd));
 
-				String cp = responseBody.toString();
-				String lg =  responseBody.toString();
-				String br =  responseBody.toString();
-				String cd =responseBody.toString();
-				String un = responseBody.toString();
-				String dd = responseBody.toString();
+
 
 				String finalResponse = "Resultado para o CEP informado";
 				finalResponse += "[{";
@@ -122,37 +117,37 @@ public class ZipCodeController extends HttpServlet {
 				// cep
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Cep\",";
-				finalResponse += "\"PropValue\":\"CEP: " + responseBody.toString()+ "\"";
+				finalResponse += "\"PropValue\":\"CEP: " + cP + "\"";
 				finalResponse += "},";
 
 				// logradouro
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Logradouro\",";
-				finalResponse += "\"PropValue\":\"LOGRADOURO: " + responseBody.toString() + "\"";
+				finalResponse += "\"PropValue\":\"LOGRADOURO: " + lg + "\"";
 				finalResponse += "},";
 
 				// bairro
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Bairro\",";
-				finalResponse += "\"PropValue\":\"BAIRRO: " + responseBody.toString()+ "\"";
+				finalResponse += "\"PropValue\":\"BAIRRO: " + br + "\"";
 				finalResponse += "},";
 
 				// cidade
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Cidade\",";
-				finalResponse += "\"PropValue\":\"CIDADE: " + responseBody.toString() + "\"";
+				finalResponse += "\"PropValue\":\"CIDADE: " + cd + "\"";
 				finalResponse += "},";
 
 				// UF
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"UF\",";
-				finalResponse += "\"PropValue\":\"UF: " + responseBody.toString() + "\"";
+				finalResponse += "\"PropValue\":\"UF: " + un + "\"";
 				finalResponse += "}";
 				
 				// DDD
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"DDD\",";
-				finalResponse += "\"PropValue\":\"DDD: " + responseBody.toString()+ "\"";
+				finalResponse += "\"PropValue\":\"DDD: " + dd + "\"";
 				finalResponse += "}";
 
 				finalResponse += "]";
