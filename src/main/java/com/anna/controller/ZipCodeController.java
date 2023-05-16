@@ -119,12 +119,17 @@ public class ZipCodeController extends HttpServlet {
 			finalResponse += "PropName\":\"Type\",";
 			finalResponse += "\"PropValue\":\"EXECFUNCTION\"";
 			finalResponse += "},";
-			
 
 			// cep
 			finalResponse += "{";
 			finalResponse += "\"PropName\":\"Expression\",";
-			finalResponse += "\"PropValue\":\"AddParm(CEP," + cepPesquisado + ")\""; 
+			finalResponse += "\"PropValue\":\"AddParm(CEP," + cepPesquisado + ")\"";
+			finalResponse += "},";
+
+			// cep
+			finalResponse += "{";
+			finalResponse += "\"PropName\":\"Expression\",";
+			finalResponse += "\"PropValue\":\"AddParm(LOGRADOURO," + logradouro + ")\"";
 			finalResponse += "},";
 
 			finalResponse += "]";
@@ -155,8 +160,6 @@ public class ZipCodeController extends HttpServlet {
 		}
 
 	}// doPost
-
-	
 
 	// metodos de encrypt e decrypt
 	public String encrypt(String message, SecretKey key, IvParameterSpec iv) throws NoSuchAlgorithmException,
