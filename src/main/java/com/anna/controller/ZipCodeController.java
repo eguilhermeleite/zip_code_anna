@@ -93,14 +93,14 @@ public class ZipCodeController extends HttpServlet {
 				String uf = (String)jsonNode.get("uf").toString();
 				String ddd =(String)jsonNode.get("ddd").toString();
 				
-				/*
+				
 				String cp = cepPesquisado;
 				String lg = logradouro;
 				String br = bairro;
 				String cd = cidade;
 				String un = uf;
 				String dd = ddd;
-				*/
+				
 
 				String finalResponse = "Resultado para o CEP informado";
 				finalResponse += "[{";
@@ -115,37 +115,37 @@ public class ZipCodeController extends HttpServlet {
 				// cep
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Cep\",";
-				finalResponse += "\"PropValue\":\"CEP: " + cepPesquisado + "\"";
+				finalResponse += "\"PropValue\":\"CEP: " + cp + "\"";
 				finalResponse += "},";
 
 				// logradouro
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Logradouro\",";
-				finalResponse += "\"PropValue\":\"LOGRADOURO: " + logradouro + "\"";
+				finalResponse += "\"PropValue\":\"LOGRADOURO: " + lg + "\"";
 				finalResponse += "},";
 
 				// bairro
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Bairro\",";
-				finalResponse += "\"PropValue\":\"BAIRRO: " + bairro + "\"";
+				finalResponse += "\"PropValue\":\"BAIRRO: " + br + "\"";
 				finalResponse += "},";
 
 				// cidade
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Cidade\",";
-				finalResponse += "\"PropValue\":\"CIDADE: " + cidade + "\"";
+				finalResponse += "\"PropValue\":\"CIDADE: " + cd + "\"";
 				finalResponse += "},";
 
 				// UF
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"UF\",";
-				finalResponse += "\"PropValue\":\"UF: " + uf + "\"";
+				finalResponse += "\"PropValue\":\"UF: " + un + "\"";
 				finalResponse += "}";
 				
 				// DDD
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"DDD\",";
-				finalResponse += "\"PropValue\":\"DDD: " + ddd + "\"";
+				finalResponse += "\"PropValue\":\"DDD: " + dd + "\"";
 				finalResponse += "}";
 
 				finalResponse += "]";
@@ -169,20 +169,7 @@ public class ZipCodeController extends HttpServlet {
 				PrintWriter out = res.getWriter();
 				out.print(finalResponse);
 
-				
-			} else {
-			//System.out.println("Erro ao consultar CEP: " + response.statusCode());
-			} //
-
-			// extrair atributos especificos do json
-			//ObjectMapper mapper = new ObjectMapper();
-			//JsonNode jsonNode = mapper.readTree(response.body());
-
-			//System.out.println("\n******************************************");
-
-		
-
-			//System.out.println("******************************************\n");
+			} 
 
 			
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
