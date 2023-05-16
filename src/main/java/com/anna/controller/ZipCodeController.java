@@ -86,8 +86,7 @@ public class ZipCodeController extends HttpServlet {
 				out.print(resposta);
 				
 
-				String finalResponse = "Resultado para o CEP informado";
-				finalResponse += "[{";
+				String finalResponse = "[{";
 				finalResponse += "\"PropName\":\"Container001\",";
 				finalResponse += "\"PropValue\":";
 				finalResponse += "[";
@@ -96,41 +95,11 @@ public class ZipCodeController extends HttpServlet {
 				finalResponse += "\"PropValue\":\"MESSAGE\"";
 				finalResponse += "},";
 
-				// cep
+				// anotherVar
 				finalResponse += "{";
-				finalResponse += "\"PropName\":\"Cep\",";
-				finalResponse += "\"PropValue\":\"CEP: " + zipCodeDec + "\"";
+				finalResponse += "\"PropName\":\"Phrase\",";
+				finalResponse += "\"PropValue\":\"O valor de AnotherVar é : " + zipCodeDec + "\"";
 				finalResponse += "},";
-
-				// logradouro
-				finalResponse += "{";
-				finalResponse += "\"PropName\":\"Logradouro\",";
-				finalResponse += "\"PropValue\":\"LOGRADOURO: " + resposta + "\"";
-				finalResponse += "},";
-
-				// bairro
-				finalResponse += "{";
-				finalResponse += "\"PropName\":\"Bairro\",";
-				finalResponse += "\"PropValue\":\"BAIRRO: " + resposta + "\"";
-				finalResponse += "},";
-
-				// cidade
-				finalResponse += "{";
-				finalResponse += "\"PropName\":\"Cidade\",";
-				finalResponse += "\"PropValue\":\"CIDADE: " + resposta + "\"";
-				finalResponse += "},";
-
-				// UF
-				finalResponse += "{";
-				finalResponse += "\"PropName\":\"UF\",";
-				finalResponse += "\"PropValue\":\"UF: " + resposta + "\"";
-				finalResponse += "}";
-
-				// DDD
-				finalResponse += "{";
-				finalResponse += "\"PropName\":\"DDD\",";
-				finalResponse += "\"PropValue\":\"DDD: " + resposta + "\"";
-				finalResponse += "}";
 
 				finalResponse += "]";
 				finalResponse += "}]";
