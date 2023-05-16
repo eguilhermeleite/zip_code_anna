@@ -24,6 +24,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,6 +44,7 @@ public class ZipCodeController extends HttpServlet {
 		super();
 	}
 
+	@PostMapping
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
 		try {
