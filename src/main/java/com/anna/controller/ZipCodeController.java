@@ -1,13 +1,13 @@
 package com.anna.controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
+import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -28,9 +28,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,15 +37,13 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/zipcode")
 public class ZipCodeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
 
 	public ZipCodeController() {
 		super();
 	}
 
 	@PostMapping
-	protected void doPost(HttpServletRequest req, HttpServletResponse res)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
 		try {
 			// chaves de desencriptar e encriptar
@@ -75,41 +70,22 @@ public class ZipCodeController extends HttpServlet {
 			// consulta o cep
 			String url = "https://viacep.com.br/ws/" + zipCodeDec + "/json/";
 
-			HttpClient client = HttpClient.newHttpClient();
-			HttpRequest request = HttpRequest.newBuilder().uri(new URI(url)).build();
+			URL urlC = new URL(url);
+			HttpURLConnection connection = (HttpURLConnection) urlC.openConnection();
+			connection.setRequestMethod("GET");
 
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			int responseCode = connection.getResponseCode();
 
-			if (response.statusCode() == 200) {
+			if (responseCode == HttpURLConnection.HTTP_OK) {
+				// Ler a resposta da API
+				String resposta = readResponse(connection);
+
+				// Enviar a resposta ao cliente
+				res.setContentType("application/json");
+				PrintWriter out = res.getWriter();
+				out.print(resposta);
 				
-				// extrair atributos especificos do json
-				ObjectMapper mapper = new ObjectMapper();
-				JsonNode jsonNode = mapper.readTree(response.body());
-				
-				String cepPesquisado = jsonNode.get("cep").asText();
-				String logradouro =jsonNode.get("logradouro").toString();
-				String bairro =jsonNode.get("bairro").toString();
-				String cidade =jsonNode.get("localidade").toString();
-				String uf =jsonNode.get("uf").toString();
-				String ddd =jsonNode.get("ddd").toString();
-				
-				
-				ObjectMapper stringMapper = new ObjectMapper();
-				
-				String jsonStringCEP = stringMapper.writeValueAsString(jsonNode.get("cep").asText());
-				
-				String jsonStringLOG = stringMapper.writeValueAsString(logradouro);
-				
-				String jsonStringBAI = stringMapper.writeValueAsString(bairro);
-				
-				String jsonStringCID = stringMapper.writeValueAsString(cidade);
-				
-				String jsonStringUFD = stringMapper.writeValueAsString(uf);
-				
-				String jsonStringDDD = stringMapper.writeValueAsString(ddd);
-				
-				
-				
+
 				String finalResponse = "Resultado para o CEP informado";
 				finalResponse += "[{";
 				finalResponse += "\"PropName\":\"Container001\",";
@@ -123,37 +99,37 @@ public class ZipCodeController extends HttpServlet {
 				// cep
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Cep\",";
-				finalResponse += "\"PropValue\":\"CEP: " + jsonStringCEP + "\"";
+				finalResponse += "\"PropValue\":\"CEP: " + zipCodeDec + "\"";
 				finalResponse += "},";
 
 				// logradouro
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Logradouro\",";
-				finalResponse += "\"PropValue\":\"LOGRADOURO: " + jsonStringCEP + "\"";
+				finalResponse += "\"PropValue\":\"LOGRADOURO: " + resposta + "\"";
 				finalResponse += "},";
 
 				// bairro
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Bairro\",";
-				finalResponse += "\"PropValue\":\"BAIRRO: " + jsonStringCEP + "\"";
+				finalResponse += "\"PropValue\":\"BAIRRO: " + resposta + "\"";
 				finalResponse += "},";
 
 				// cidade
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"Cidade\",";
-				finalResponse += "\"PropValue\":\"CIDADE: " + jsonStringCEP + "\"";
+				finalResponse += "\"PropValue\":\"CIDADE: " + resposta + "\"";
 				finalResponse += "},";
 
 				// UF
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"UF\",";
-				finalResponse += "\"PropValue\":\"UF: " + jsonStringCEP + "\"";
+				finalResponse += "\"PropValue\":\"UF: " + resposta + "\"";
 				finalResponse += "}";
-				
+
 				// DDD
 				finalResponse += "{";
 				finalResponse += "\"PropName\":\"DDD\",";
-				finalResponse += "\"PropValue\":\"DDD: " + jsonStringCEP + "\"";
+				finalResponse += "\"PropValue\":\"DDD: " + resposta + "\"";
 				finalResponse += "}";
 
 				finalResponse += "]";
@@ -174,23 +150,32 @@ public class ZipCodeController extends HttpServlet {
 				finalResponse = finalResponse + ivReceived + newIVEncrip;
 
 				// Envio das informações ao AnnA
-				PrintWriter out = res.getWriter();
-				out.print(finalResponse);
+				PrintWriter out1 = res.getWriter();
+				out1.print(finalResponse);
 
-			} 
+			} else {
+				// Tratar erros, se necessário
+				res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			}
 
-			
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
 				| InvalidAlgorithmParameterException | UnsupportedEncodingException | IllegalBlockSizeException
 				| BadPaddingException ex) {
 			Logger.getLogger(ZipCodeController.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
 		}
 
 	}// doPost
+
+	private String readResponse(HttpURLConnection connection) throws IOException {
+		StringBuilder response = new StringBuilder();
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+			String inputLine;
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+		}
+		return response.toString();
+	}
 
 	// metodos de encrypt e decrypt
 	public String encrypt(String message, SecretKey key, IvParameterSpec iv) throws NoSuchAlgorithmException,
