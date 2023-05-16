@@ -41,9 +41,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class ZipCodeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	// extrair atributos especificos do json
-	ObjectMapper mapper = new ObjectMapper();
-	
 
 	public ZipCodeController() {
 		super();
@@ -85,14 +82,25 @@ public class ZipCodeController extends HttpServlet {
 
 			if (response.statusCode() == 200) {
 				
+				// extrair atributos especificos do json
+				ObjectMapper mapper = new ObjectMapper();
 				JsonNode jsonNode = mapper.readTree(response.body());
-				String cepPesquisado = jsonNode.get("cep").toString();
-				String logradouro = jsonNode.get("logradouro").toString();
-				String bairro = jsonNode.get("bairro").toString();
-				String cidade = jsonNode.get("localidade").toString();
-				String uf = jsonNode.get("uf").toString();
-				String ddd = jsonNode.get("ddd").toString();
 				
+				String cepPesquisado = (String)jsonNode.get("cep").toString();
+				String logradouro = (String)jsonNode.get("logradouro").toString();
+				String bairro = (String)jsonNode.get("bairro").toString();
+				String cidade = (String)jsonNode.get("localidade").toString();
+				String uf = (String)jsonNode.get("uf").toString();
+				String ddd =(String)jsonNode.get("ddd").toString();
+				
+				/*
+				String cp = cepPesquisado;
+				String lg = logradouro;
+				String br = bairro;
+				String cd = cidade;
+				String un = uf;
+				String dd = ddd;
+				*/
 
 				String finalResponse = "Resultado para o CEP informado";
 				finalResponse += "[{";
@@ -182,10 +190,8 @@ public class ZipCodeController extends HttpServlet {
 				| BadPaddingException ex) {
 			Logger.getLogger(ZipCodeController.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
