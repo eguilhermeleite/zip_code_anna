@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -67,24 +66,7 @@ public class ZipCodeController extends HttpServlet {
 			// agora e possivel desencriptar o valor do cep digitado pelo usuario
 			String zipCodeDec = decrypt(zipCode, dKey, iv);
 
-			// consulta o cep
-			String url = "https://viacep.com.br/ws/" + zipCodeDec + "/json/";
-
-			URL urlC = new URL(url);
-			HttpURLConnection connection = (HttpURLConnection) urlC.openConnection();
-			connection.setRequestMethod("GET");
-
-			int responseCode = connection.getResponseCode();
-
-			if (responseCode == HttpURLConnection.HTTP_OK) {
-				// Ler a resposta da API
-				String resposta = readResponse(connection);
-
-				// Enviar a resposta ao cliente
-				res.setContentType("application/json");
-				PrintWriter out = res.getWriter();
-				out.print(resposta);
-				
+		
 
 				String finalResponse = "[{";
 				finalResponse += "\"PropName\":\"Container001\",";
@@ -122,10 +104,7 @@ public class ZipCodeController extends HttpServlet {
 				PrintWriter out1 = res.getWriter();
 				out1.print(finalResponse);
 
-			} else {
-				// Tratar erros, se necessário
-				res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			}
+			
 
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
 				| InvalidAlgorithmParameterException | UnsupportedEncodingException | IllegalBlockSizeException
