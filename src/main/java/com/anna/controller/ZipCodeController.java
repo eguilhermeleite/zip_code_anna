@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,7 +46,8 @@ public class ZipCodeController extends HttpServlet {
 	}
 
 	@PostMapping
-	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse res)
+			throws ServletException, IOException {
 
 		try {
 			// chaves de desencriptar e encriptar
@@ -158,16 +160,14 @@ public class ZipCodeController extends HttpServlet {
 			new Random().nextBytes(randomBytes);
 			final IvParameterSpec newIV = new IvParameterSpec(randomBytes);
 			String newIVEncoded = new String(Base64.getEncoder().encode(randomBytes));
-			
-			
 
 			// Encriptação do "IV Novo" com a chave de desencriptação e o "IV Recebido"
 			finalResponse = encrypt(finalResponse, eKey, newIV);
-			String neIVEncrip = encrypt(newIVEncoded, dKey, iv);
+			String newIVEncrip = encrypt(newIVEncoded, dKey, iv);
 
 			// Concatenação do JSON de resposta encriptado, o "IV Recebido" e o "IV Novo
 			// Encriptado"
-			finalResponse = finalResponse + ivReceived + neIVEncrip;
+			finalResponse = finalResponse + ivReceived + newIVEncrip;
 
 	
 			// Envio das informações ao AnnA
