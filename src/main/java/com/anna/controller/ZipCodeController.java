@@ -113,43 +113,19 @@ public class ZipCodeController extends HttpServlet {
 
 			String finalResponse = "Resultado para o CEP informado";
 			finalResponse += "[{";
-			finalResponse += "\"PropName\":\"Container001\",";
+			finalResponse += "\"PropName\":\"EXECFUNCTION002\",";
 			finalResponse += "\"PropValue\":";
 			finalResponse += "[";
 			finalResponse += "{\"";
 			finalResponse += "PropName\":\"Type\",";
-			finalResponse += "\"PropValue\":\"MESSAGE\"";
+			finalResponse += "\"PropValue\":\"EXECFUNCTION\"";
 			finalResponse += "},";
 
 			// cep
 			finalResponse += "{";
-			finalResponse += "\"PropName\":\"Cep\",";
-			finalResponse += "\"PropValue\":\"CEP: " + cepPesquisado + "\"";
+			finalResponse += "\"PropName\":\"Expression\",";
+			finalResponse += "\"PropValue\":\"AddParm(CEP," + cepPesquisado + "\")";
 			finalResponse += "},";
-
-			// logradouro
-			finalResponse += "{";
-			finalResponse += "\"PropName\":\"Logradouro\",";
-			finalResponse += "\"PropValue\":\"LOGRADOURO: " + logradouro + "\"";
-			finalResponse += "},";
-
-			// bairro
-			finalResponse += "{";
-			finalResponse += "\"PropName\":\"Bairro\",";
-			finalResponse += "\"PropValue\":\"BAIRRO: " + bairro + "\"";
-			finalResponse += "},";
-
-			// cidade
-			finalResponse += "{";
-			finalResponse += "\"PropName\":\"Cidade\",";
-			finalResponse += "\"PropValue\":\"CIDADE: " + cidade + "\"";
-			finalResponse += "},";
-
-			// UF
-			finalResponse += "{";
-			finalResponse += "\"PropName\":\"UF\",";
-			finalResponse += "\"PropValue\":\"UF: " + uf + "\"";
-			finalResponse += "}";
 
 			finalResponse += "]";
 			finalResponse += "}]";
