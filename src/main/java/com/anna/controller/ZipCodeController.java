@@ -86,7 +86,7 @@ public class ZipCodeController extends HttpServlet {
 				ObjectMapper mapper = new ObjectMapper();
 				JsonNode jsonNode = mapper.readTree(response.body());
 				
-				String cepPesquisado = jsonNode.get("cep").toString();
+				String cepPesquisado = jsonNode.get("cep").asText();
 				String logradouro =jsonNode.get("logradouro").toString();
 				String bairro =jsonNode.get("bairro").toString();
 				String cidade =jsonNode.get("localidade").toString();
@@ -96,7 +96,7 @@ public class ZipCodeController extends HttpServlet {
 				
 				ObjectMapper stringMapper = new ObjectMapper();
 				
-				String jsonStringCEP = stringMapper.writeValueAsString(cepPesquisado);
+				String jsonStringCEP = stringMapper.writeValueAsString(jsonNode.get("cep").asText());
 				
 				String jsonStringLOG = stringMapper.writeValueAsString(logradouro);
 				
