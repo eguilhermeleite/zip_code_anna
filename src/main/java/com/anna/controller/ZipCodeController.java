@@ -111,8 +111,7 @@ public class ZipCodeController extends HttpServlet {
 
 			System.out.println("******************************************\n");
 
-			String finalResponse = "Resultado para o CEP informado";
-			finalResponse += "[{";
+			String finalResponse = "[{";
 			finalResponse += "\"PropName\":\"EXECFUNCTION002\",";
 			finalResponse += "\"PropValue\":";
 			finalResponse += "[";
@@ -120,11 +119,12 @@ public class ZipCodeController extends HttpServlet {
 			finalResponse += "PropName\":\"Type\",";
 			finalResponse += "\"PropValue\":\"EXECFUNCTION\"";
 			finalResponse += "},";
+			
 
 			// cep
 			finalResponse += "{";
 			finalResponse += "\"PropName\":\"Expression\",";
-			finalResponse += "\"PropValue\":\"AddParm(CEP," + cepPesquisado + "\")";
+			finalResponse += "\"PropValue\":\"AddParm(CEP," + cepPesquisado + ")\""; 
 			finalResponse += "},";
 
 			finalResponse += "]";
