@@ -82,98 +82,105 @@ public class ZipCodeController extends HttpServlet {
 			if (response.statusCode() == 200) {
 				//System.out.println("\n******************************************");
 				//System.out.println(response.body());
-				String rb = response.body();
+				// extrair atributos especificos do json
+				ObjectMapper mapper = new ObjectMapper();
+				JsonNode jsonNode = mapper.readTree(response.body());
+				String cepPesquisado = jsonNode.get("cep").asText();
+				//System.out.println("CEP: " + cepPesquisado);
+
+				String logradouro = jsonNode.get("logradouro").asText();
+				//System.out.println("Logradouro: " + logradouro);
+
+				String bairro = jsonNode.get("bairro").asText();
+				//System.out.println("Bairro: " + bairro);
+
+				String cidade = jsonNode.get("localidade").asText();
+				//System.out.println("Cidade: " + cidade);
+
+				String uf = jsonNode.get("uf").asText();
+				//System.out.println("UF: " + uf);
+
+				String ddd = jsonNode.get("ddd").asText();
+				//System.out.println("DDD: " + ddd);
+				
+
+				String finalResponse = "Resultado para o CEP informado";
+				finalResponse += "[{";
+				finalResponse += "\"PropName\":\"Container001\",";
+				finalResponse += "\"PropValue\":";
+				finalResponse += "[";
+				finalResponse += "{\"";
+				finalResponse += "PropName\":\"Type\",";
+				finalResponse += "\"PropValue\":\"MESSAGE\"";
+				finalResponse += "},";
+
+				// cep
+				finalResponse += "{";
+				finalResponse += "\"PropName\":\"Cep\",";
+				finalResponse += "\"PropValue\":\"CEP: " + cepPesquisado + "\"";
+				finalResponse += "},";
+
+				// logradouro
+				finalResponse += "{";
+				finalResponse += "\"PropName\":\"Logradouro\",";
+				finalResponse += "\"PropValue\":\"LOGRADOURO: " + logradouro + "\"";
+				finalResponse += "},";
+
+				// bairro
+				finalResponse += "{";
+				finalResponse += "\"PropName\":\"Bairro\",";
+				finalResponse += "\"PropValue\":\"BAIRRO: " + bairro + "\"";
+				finalResponse += "},";
+
+				// cidade
+				finalResponse += "{";
+				finalResponse += "\"PropName\":\"Cidade\",";
+				finalResponse += "\"PropValue\":\"CIDADE: " + cidade + "\"";
+				finalResponse += "},";
+
+				// UF
+				finalResponse += "{";
+				finalResponse += "\"PropName\":\"UF\",";
+				finalResponse += "\"PropValue\":\"UF: " + uf + "\"";
+				finalResponse += "}";
+
+				finalResponse += "]";
+				finalResponse += "}]";
+
+				// Gerando um novo IV
+				byte[] randomBytes = new byte[8];
+				new Random().nextBytes(randomBytes);
+				final IvParameterSpec newIV = new IvParameterSpec(randomBytes);
+				String newIVEncoded = new String(Base64.getEncoder().encode(randomBytes));
+
+				// Encriptação do "IV Novo" com a chave de desencriptação e o "IV Recebido"
+				finalResponse = encrypt(finalResponse, eKey, newIV);
+				String newIVEncrip = encrypt(newIVEncoded, dKey, iv);
+
+				// Concatenação do JSON de resposta encriptado, o "IV Recebido" e o "IV Novo
+				// Encriptado"
+				finalResponse = finalResponse + ivReceived + newIVEncrip;
+
+				// Envio das informações ao AnnA
+				PrintWriter out = res.getWriter();
+				out.print(finalResponse);
+
+				
 			} else {
 			//System.out.println("Erro ao consultar CEP: " + response.statusCode());
 			} //
 
 			// extrair atributos especificos do json
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode jsonNode = mapper.readTree(response.body());
+			//ObjectMapper mapper = new ObjectMapper();
+			//JsonNode jsonNode = mapper.readTree(response.body());
 
 			//System.out.println("\n******************************************");
 
-			String cepPesquisado = jsonNode.get("cep").asText();
-			//System.out.println("CEP: " + cepPesquisado);
-
-			String logradouro = jsonNode.get("logradouro").asText();
-			//System.out.println("Logradouro: " + logradouro);
-
-			String bairro = jsonNode.get("bairro").asText();
-			//System.out.println("Bairro: " + bairro);
-
-			String cidade = jsonNode.get("localidade").asText();
-			//System.out.println("Cidade: " + cidade);
-
-			String uf = jsonNode.get("uf").asText();
-			//System.out.println("UF: " + uf);
-
-			String ddd = jsonNode.get("ddd").asText();
-			//System.out.println("DDD: " + ddd);
+		
 
 			//System.out.println("******************************************\n");
 
-			String finalResponse = "Resultado para o CEP informado";
-			finalResponse += "[{";
-			finalResponse += "\"PropName\":\"Container001\",";
-			finalResponse += "\"PropValue\":";
-			finalResponse += "[";
-			finalResponse += "{\"";
-			finalResponse += "PropName\":\"Type\",";
-			finalResponse += "\"PropValue\":\"MESSAGE\"";
-			finalResponse += "},";
-
-			// cep
-			finalResponse += "{";
-			finalResponse += "\"PropName\":\"Cep\",";
-			finalResponse += "\"PropValue\":\"CEP: " + cepPesquisado + "\"";
-			finalResponse += "},";
-
-			// logradouro
-			finalResponse += "{";
-			finalResponse += "\"PropName\":\"Logradouro\",";
-			finalResponse += "\"PropValue\":\"LOGRADOURO: " + logradouro + "\"";
-			finalResponse += "},";
-
-			// bairro
-			finalResponse += "{";
-			finalResponse += "\"PropName\":\"Bairro\",";
-			finalResponse += "\"PropValue\":\"BAIRRO: " + bairro + "\"";
-			finalResponse += "},";
-
-			// cidade
-			finalResponse += "{";
-			finalResponse += "\"PropName\":\"Cidade\",";
-			finalResponse += "\"PropValue\":\"CIDADE: " + cidade + "\"";
-			finalResponse += "},";
-
-			// UF
-			finalResponse += "{";
-			finalResponse += "\"PropName\":\"UF\",";
-			finalResponse += "\"PropValue\":\"UF: " + uf + "\"";
-			finalResponse += "}";
-
-			finalResponse += "]";
-			finalResponse += "}]";
-
-			// Gerando um novo IV
-			byte[] randomBytes = new byte[8];
-			new Random().nextBytes(randomBytes);
-			final IvParameterSpec newIV = new IvParameterSpec(randomBytes);
-			String newIVEncoded = new String(Base64.getEncoder().encode(randomBytes));
-
-			// Encriptação do "IV Novo" com a chave de desencriptação e o "IV Recebido"
-			finalResponse = encrypt(finalResponse, eKey, newIV);
-			String newIVEncrip = encrypt(newIVEncoded, dKey, iv);
-
-			// Concatenação do JSON de resposta encriptado, o "IV Recebido" e o "IV Novo
-			// Encriptado"
-			finalResponse = finalResponse + ivReceived + newIVEncrip;
-
-			// Envio das informações ao AnnA
-			PrintWriter out = res.getWriter();
-			out.print(finalResponse);
-
+			
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
 				| InvalidAlgorithmParameterException | UnsupportedEncodingException | IllegalBlockSizeException
 				| BadPaddingException ex) {
