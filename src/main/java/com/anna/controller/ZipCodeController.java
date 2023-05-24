@@ -81,11 +81,14 @@ public class ZipCodeController extends HttpServlet {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 			if (response.statusCode() == 200) {
+				
 				System.out.println("\n******************************************");
-				System.out.println(response.body());
-				System.out.println("\n******************************************");
+				System.out.println("VALORES VINDOS DO ANNA");
 				System.out.println("Valor de \"ANNAEXEC\": " + ivReceived);
 				System.out.println("Variavel \"zipCode\": " + zipCode );
+				System.out.println("\n******************************************");
+				
+				System.out.println(response.body());
 			} else {
 				System.out.println("Erro ao consultar CEP: " + response.statusCode());
 			} //
@@ -132,7 +135,7 @@ public class ZipCodeController extends HttpServlet {
 
 			finalResponse += "]";
 			finalResponse += "}]";
-
+			
 			// Gerando um novo IV
 			byte[] randomBytes = new byte[8];
 			new Random().nextBytes(randomBytes);
@@ -150,6 +153,11 @@ public class ZipCodeController extends HttpServlet {
 			// Envio das informações ao AnnA
 			PrintWriter out = res.getWriter();
 			out.print(finalResponse);
+			
+			System.out.println("******************************************\n");
+			System.out.println("VALOR DE SAÍDA PARA O ANNA");
+			System.out.println(finalResponse);
+			System.out.println("******************************************\n");
 
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
 				| InvalidAlgorithmParameterException | UnsupportedEncodingException | IllegalBlockSizeException
