@@ -59,17 +59,18 @@ public class ZipCodeController extends HttpServlet {
 			String zipCode = req.getParameter("zipCode");// variavel digitada pelo usuario
 
 			// obter os bytes das chaves ANNAEXC, chave de desencriptar e chave de encriptar
-			byte[] ivDecoded = Base64.getDecoder().decode(ivReceived);
-			byte[] decKeyDecoded = Base64.getDecoder().decode(decKey);
+			//byte[] ivDecoded = Base64.getDecoder().decode(ivReceived);
+			//byte[] decKeyDecoded = Base64.getDecoder().decode(decKey);
 			byte[] encKeyDecoded = Base64.getDecoder().decode(encKey);
 
 			// associar as chaves aos tipos necessarios para os metodos de encrip./desencr.
-			IvParameterSpec iv = new IvParameterSpec(ivDecoded);
-			SecretKey dKey = new SecretKeySpec(decKeyDecoded, "DESede");
+			//IvParameterSpec iv = new IvParameterSpec(ivDecoded);
+			//SecretKey dKey = new SecretKeySpec(decKeyDecoded, "DESede");
 			SecretKey eKey = new SecretKeySpec(encKeyDecoded, "DESede");
-
+			
+			
 			// agora e possivel desencriptar o valor do cep digitado pelo usuario
-			String zipCodeDec = decrypt(zipCode, dKey, iv);
+			String zipCodeDec = decrypt(zipCode, desKey(decKey, "DESede"), ivPar(ivReceived));
 
 			// * consulta cep
 			String url = "https://viacep.com.br/ws/" + zipCodeDec + "/json/";
@@ -82,6 +83,9 @@ public class ZipCodeController extends HttpServlet {
 			if (response.statusCode() == 200) {
 				System.out.println("\n******************************************");
 				System.out.println(response.body());
+				System.out.println("\n******************************************");
+				System.out.println("Valor de \"ANNAEXEC\": " + ivReceived);
+				System.out.println("Variavel \"zipCode\": " + zipCode );
 			} else {
 				System.out.println("Erro ao consultar CEP: " + response.statusCode());
 			} //
@@ -120,7 +124,7 @@ public class ZipCodeController extends HttpServlet {
 			finalResponse += "\"PropValue\":\"EXECFUNCTION\"";
 			finalResponse += "},";
 
-			// cep -logradouro
+			// o AnnA captura o valor das variaveis aqui
 			finalResponse += "{";
 			finalResponse += "\"PropName\":\"Expression\",";
 			finalResponse += "\"PropValue\":\"AddParm(CEP," + cepPesquisado + ")AddParm(LOGRADOURO," + logradouro + ")AddParm(BAIRRO," + bairro + ")AddParm(CIDADE," + cidade + ")AddParm(UF," + uf + ")AddParm(DDD," + ddd + ")\"";                                          
@@ -137,7 +141,7 @@ public class ZipCodeController extends HttpServlet {
 
 			// Encriptação do "IV Novo" com a chave de desencriptação e o "IV Recebido"
 			finalResponse = encrypt(finalResponse, eKey, newIV);
-			String newIVEncrip = encrypt(newIVEncoded, dKey, iv);
+			String newIVEncrip = encrypt(newIVEncoded, desKey(decKey, "DESede"), ivPar(ivReceived));
 
 			// Concatenação do JSON de resposta encriptado, o "IV Recebido" e o "IV Novo
 			// Encriptado"
@@ -154,7 +158,25 @@ public class ZipCodeController extends HttpServlet {
 		}
 
 	}// doPost
+	
+	/*para desencriptar uma variável é preciso: 
+	 * valorDaVariavel + SecretKeySpec chaveDesencriptacao + IvParameterSpec ANNAEXEC */
+	
+	//obter os bytes e associar ao tipo necessario
+	public IvParameterSpec ivPar (String key) {
+		byte[] ivDecoded = Base64.getDecoder().decode(key);
+		IvParameterSpec iv = new IvParameterSpec(ivDecoded);
+		return iv;
+	}
+	
+	public SecretKeySpec desKey(String key, String algorit) {
+		byte[] decKeyDecoded = Base64.getDecoder().decode(key);
+		SecretKey dKey = new SecretKeySpec(decKeyDecoded, algorit/*"DESede"*/);
+		return (SecretKeySpec)dKey;
+	}
 
+	//**********************************************************************************
+	
 	// metodos de encrypt e decrypt
 	public String encrypt(String message, SecretKey key, IvParameterSpec iv) throws NoSuchAlgorithmException,
 			NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException,
